@@ -24,7 +24,34 @@ const SignUp = () => {
             alert("Password do not match");
             return;
         }
+        sendData(inputData);
         console.log(inputData);
+        setInputData({
+            email: "",
+            password: "",
+            confirmPass: "",
+        });
+    }
+
+    async function sendData(inputData){
+        try{
+            const response=await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_AUTHENTICATION_API_KEY}`,{
+                method: "POST",
+                body: JSON.stringify({
+                    email: inputData.email,
+                    password: inputData.password,
+                    returnSecureToken: true,
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            console.log(response.data);
+        }
+        catch(err){
+            console.log(err);
+        }
+
     }
 
 
@@ -50,7 +77,7 @@ const SignUp = () => {
                 <button type='submit'>Sign Up</button>
             </form>
         </div>
-        <button>Have an account?Login</button>
+        <button>Have an account? Login</button>
     </div>
   )
 }
