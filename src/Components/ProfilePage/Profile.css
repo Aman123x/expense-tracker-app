@@ -1,0 +1,15 @@
+.profile_parent{
+    display: flex;
+    justify-content: space-around;
+}
+
+.profile_parent p:nth-child(2){
+    background-color: #E8DBDB;
+    padding-inline: 1.5rem;
+    border-radius: 5px;
+}
+
+.profile_parent span{
+    color: blue;
+    cursor: pointer;
+}

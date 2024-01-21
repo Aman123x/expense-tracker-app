@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import "./Login.css"
 
-const Login = () => {
+const Login = (props) => {
 
     const [inputLogin,setInputLogin]=useState({
         email:"",
         password:""
     })
+
+    const[idToken,setIdToken]=useState("");
 
     function handleLogin(e){
         let key=e.target.name;
@@ -15,7 +17,33 @@ const Login = () => {
 
     function implementLogin(e){
         e.preventDefault();
+        verifyData(inputLogin);
         console.log(inputLogin);
+    }
+    
+
+    async function verifyData(inputLogin){
+        try{
+            const response=await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_AUTHENTICATION_API_KEY}`,{
+                method: "POST",
+                body: JSON.stringify({
+                    email: inputLogin.email,
+                    password: inputLogin.password,
+                    returnSecureToken: true,
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data=await response.json();
+            setIdToken(data.idToken);
+            props.handleLogin(true);
+            console.log(data.idToken);
+        }
+        catch(err){
+            alert("Wrong Email or Password");
+            console.log(err);
+        }
     }
 
   return (
@@ -35,7 +63,7 @@ const Login = () => {
             </form>
             <p>Forget Password</p>
         </div>
-        <button>Have an account? SignUp</button>
+        <button onClick={() => props.toggleForm()}>Have an account? SignUp</button>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import "./SignUp.css";
 
-const SignUp = () => {
+const SignUp = (props) => {
 
     const[inputData,setInputData]=useState({
         email:"",
@@ -77,7 +77,7 @@ const SignUp = () => {
                 <button type='submit'>Sign Up</button>
             </form>
         </div>
-        <button>Have an account? Login</button>
+        <button onClick={() => props.toggleForm()}>Have an account? Login</button>
     </div>
   )
 }
