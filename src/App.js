@@ -30,7 +30,7 @@ function App() {
   return (
     <div>
       {isLogin ? (
-        <Profile idToken={idToken}/>
+        <Profile idToken={idToken} setIsLogin={setIsLogin}/>
       ) : showLogin ? (
         <Login toggleForm={toggleForm} handleLogin={handleLogin} setIdToken={setIdToken} />
       ) : (

@@ -16,7 +16,7 @@ const Login = (props) => {
     function implementLogin(e){
         e.preventDefault();
         verifyData(inputLogin);
-        console.log(inputLogin);
+        // console.log(inputLogin);
     }
     
 
@@ -37,7 +37,7 @@ const Login = (props) => {
             props.setIdToken(data.idToken);
             localStorage.setItem('token', data.idToken);
             props.handleLogin(true);
-            console.log(data.idToken);
+            // console.log(data.idToken);
         }
         catch(err){
             alert("Wrong Email or Password");

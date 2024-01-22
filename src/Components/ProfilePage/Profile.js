@@ -7,6 +7,7 @@ const Profile = (props) => {
     const[profileName,setProfileName]=useState("");
     const[profileImage,setProfileImage]=useState("");
     const[btn,setBtn]=useState(null);
+    const[mesg,setMesg]=useState(false);
 
     const handleEdit=()=>{
         setShowEdit(false);
@@ -41,7 +42,7 @@ const Profile = (props) => {
             if (data.users && data.users.length > 0) {
                 setProfileName(data.users[0].displayName);
                 setProfileImage(data.users[0].photoUrl);
-                console.log("User Data:", data.users[0]);
+                // console.log("User Data:", data.users[0]);
                 
             } else {
                 console.log("No user data found");
@@ -67,26 +68,40 @@ const Profile = (props) => {
                 },
             });
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
         }
         catch(err){
             console.log(err);
         }
     }
     async function handleVerifyMail(){
-        const response=await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${process.env.REACT_APP_AUTHENTICATION_API_KEY}`,{
-            method: "POST",
-            body: JSON.stringify({
-                requestType:"VERIFY_EMAIL",
-                idToken:localStorage.getItem('token'),
-            }),
-        });
-        const data=await response.json();
-        console.log(data);
+        try{
+            const response=await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${process.env.REACT_APP_AUTHENTICATION_API_KEY}`,{
+                method: "POST",
+                body: JSON.stringify({
+                    requestType:"VERIFY_EMAIL",
+                    idToken:localStorage.getItem('token'),
+                }),
+            });
+            const data=await response.json();
+            setMesg(true);
+            console.log(data);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+
+    function handleLogout(){
+        localStorage.removeItem("token");
+        props.setIsLogin(false);
     }
 
   return (
     <div>
+        <div>
+            <button onClick={handleLogout}>Logout</button>
+        </div>
         {
             showEdit?
             <>
@@ -94,8 +109,11 @@ const Profile = (props) => {
                     <p>Welcome to Expense Tracker!!!</p>
                     <p>Your Profile is incomplete. <span onClick={handleEdit}>Complete Now</span></p> 
                 </div>
-                <button onClick={handleVerifyMail}>Verify Email</button>
+                {!mesg && <button onClick={handleVerifyMail}>Verify Email</button>}
                 <hr/>
+                {
+                    mesg && <p>Check your email , you might have recieved a verification link . Click on it to verify</p>
+                }
             </>:
             <>
                 <div>
