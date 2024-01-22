@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "./Profile.css"
 
 const Profile = (props) => {
@@ -14,8 +14,42 @@ const Profile = (props) => {
 
     async function handleUpdate(){
         setBtn({profileName,profileImage});
+        setProfileName("");
+        setProfileImage("");
         await callingEditApi(btn);
-        console.log(btn);
+        // console.log(btn);
+
+        gettingDataFromServer();
+    }
+
+    useEffect(()=>{
+        gettingDataFromServer()
+    },[])
+
+    async function gettingDataFromServer(){
+        try{
+            const response=await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${process.env.REACT_APP_AUTHENTICATION_API_KEY}`,{
+                method: "POST",
+                body: JSON.stringify({
+                    idToken:localStorage.getItem('token'),
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data=await response.json();
+            if (data.users && data.users.length > 0) {
+                setProfileName(data.users[0].displayName);
+                setProfileImage(data.users[0].photoUrl);
+                console.log("User Data:", data.users[0]);
+                
+            } else {
+                console.log("No user data found");
+            }
+        }
+        catch(err){
+            console.log(err);
+        }
     }
 
     async function callingEditApi(btn){
@@ -38,7 +72,17 @@ const Profile = (props) => {
         catch(err){
             console.log(err);
         }
-
+    }
+    async function handleVerifyMail(){
+        const response=await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${process.env.REACT_APP_AUTHENTICATION_API_KEY}`,{
+            method: "POST",
+            body: JSON.stringify({
+                requestType:"VERIFY_EMAIL",
+                idToken:localStorage.getItem('token'),
+            }),
+        });
+        const data=await response.json();
+        console.log(data);
     }
 
   return (
@@ -50,6 +94,7 @@ const Profile = (props) => {
                     <p>Welcome to Expense Tracker!!!</p>
                     <p>Your Profile is incomplete. <span onClick={handleEdit}>Complete Now</span></p> 
                 </div>
+                <button onClick={handleVerifyMail}>Verify Email</button>
                 <hr/>
             </>:
             <>
