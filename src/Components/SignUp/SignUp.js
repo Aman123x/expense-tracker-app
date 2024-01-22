@@ -46,7 +46,7 @@ const SignUp = (props) => {
                     "Content-Type": "application/json",
                 },
             });
-            console.log(response.data);
+            // console.log(response.data);
         }
         catch(err){
             console.log(err);

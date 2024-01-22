@@ -1,15 +1,66 @@
 .profile_parent{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    padding-inline: 20px;
 }
 
 .profile_parent p:nth-child(2){
     background-color: #E8DBDB;
     padding-inline: 1.5rem;
     border-radius: 5px;
+    max-width: 380px;
 }
 
 .profile_parent span{
     color: blue;
+    cursor: pointer;
+}
+
+.upload_parent{
+    margin-left: 20%;
+}
+
+.upload_parent_child1{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 20px;
+}
+
+.upload_parent_child1>button{
+    background-color: white;
+    color: tomato;
+    border: 1px solid tomato;
+    font-size: 16px;
+    padding: 0.4em 0.5em;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.upload_parent_child2{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.upload_parent_child2 input{
+    width: 30%;
+    padding: 0.4em;
+}
+
+.upload_parent_child2 label{
+    font-size: 18px;
+}
+
+.upload_parent>button{
+    padding: 0.4em 1em;
+    background-color: #B57272;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-bottom: 10px;
     cursor: pointer;
 }

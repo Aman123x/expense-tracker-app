@@ -8,8 +8,6 @@ const Login = (props) => {
         password:""
     })
 
-    const[idToken,setIdToken]=useState("");
-
     function handleLogin(e){
         let key=e.target.name;
         setInputLogin({...inputLogin,[key]:e.target.value});
@@ -36,7 +34,8 @@ const Login = (props) => {
                 },
             });
             const data=await response.json();
-            setIdToken(data.idToken);
+            props.setIdToken(data.idToken);
+            localStorage.setItem('token', data.idToken);
             props.handleLogin(true);
             console.log(data.idToken);
         }
