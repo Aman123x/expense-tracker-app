@@ -11,6 +11,9 @@ const AddExpense = () => {
   const [submittedData, setSubmittedData] = useState(null);
   const [dataFireBase, setDataFireBase] = useState([]);
 
+  const [changeBtn,setChangeBtn]=useState(false);
+  const[keyEdit,setKeyEdit]=useState("");
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setExpenseData({ ...expenseData, [name]: value });
@@ -48,9 +51,8 @@ const AddExpense = () => {
   };
 
   useEffect(() => {
-    
     const fetchData = async () => {
-      if (submittedData !== null) {
+      if (submittedData !== null && keyEdit==="") {
         await sendSubmittedData();
       }
 
@@ -74,14 +76,88 @@ const AddExpense = () => {
       const data = await response.json();
       // Convert the object into an array of objects
       const dataArray = Object.keys(data).map((key) => ({
-        id: key, 
+        id: key,
         ...data[key],
       }));
       setDataFireBase([dataArray]);
-    //   console.log(dataFireBase);
+      //   console.log(dataFireBase);
       // console.log(data);
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  async function handleEdit(key) {
+    setChangeBtn(true);
+    setKeyEdit(key);
+    try {
+        const response = await fetch(
+          `https://expense-tracker-10d64-default-rtdb.firebaseio.com/expenseData/${key}.json`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+    
+        // Set the expenseData state with the retrieved data
+        setExpenseData({
+          amount: data.amount || "",
+          description: data.description || "",
+          category: data.category || "Food",
+        });
+        // await handleDelete(key);
+        // setChangeBtn(false);
+        console.log(key);
+    } 
+    catch (err) {
+        console.log(err);
+    }
+  }
+
+  async function handleEditBtn(){
+    const key=keyEdit;
+    try {
+        const response = await fetch(
+          `https://expense-tracker-10d64-default-rtdb.firebaseio.com/expenseData/${key}.json`,
+          {
+            method: "PUT",
+            body: JSON.stringify(expenseData),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data=await response.json();
+        await gettingDataFromServer()
+        console.log(data);
+        setChangeBtn(false);
+        setKeyEdit("");
+        console.log(key);
+    }
+    catch (err) {
+        console.log(err);
+    }
+  }
+
+  async function handleDelete(key) {
+    try {
+        const response = await fetch(
+          `https://expense-tracker-10d64-default-rtdb.firebaseio.com/expenseData/${key}.json`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        await gettingDataFromServer()
+        console.log ("Expense successfuly deleted");
+    }
+    catch (err) {
+        console.log(err);
     }
   }
 
@@ -132,7 +208,8 @@ const AddExpense = () => {
           </select>
         </div>
 
-        <button type="submit">Submit</button>
+        {!changeBtn ?<button type="submit">Submit</button>:<button onClick={handleEditBtn}>Edit</button>}
+
       </form>
       <div>
         <h3>Data from Backend:</h3>
@@ -146,6 +223,8 @@ const AddExpense = () => {
                 <br />
                 <strong>Category:</strong> {item.category}
                 <br />
+                <button className="btn_edit" onClick={()=>handleEdit(item.id)}>Edit</button>{" "}
+                <button className="btn_delete" onClick={()=>handleDelete(item.id)}>Delete</button>
               </li>
             ))
           )}

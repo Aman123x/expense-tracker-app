@@ -58,9 +58,19 @@ select {
   border: 1px solid #ccc;
   border-radius: 4px;
   margin-bottom: 10px;
-  background-color: #f9f9f9; /* Add a subtle background color */
+  background-color: #eed5d5; 
+  margin-top: 10px;
 }
 
 .add-expense-container li strong {
   color: #333;
+}
+
+.btn_edit{
+  margin-top: 5px;
+  background-color: blue !important;
+}
+
+.btn_delete{
+  background-color: red !important;
 }
