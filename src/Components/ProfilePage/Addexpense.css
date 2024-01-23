@@ -1,53 +1,66 @@
 .add-expense-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
- .form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  .form-group input,
-  select {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
- .add-expense-container button {
-    background-color: #4caf50;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .add-expense-container button:hover {
-    background-color: #45a049;
-  }
-  
-  .submitted-data-container {
-    margin-top: 20px;
-  }
-  
-  .submitted-data-item {
-    list-style-type: none;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 10px;
-  }
-  
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff; /* Set a background color */
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333; /* Set label color */
+}
+
+.form-group input,
+select {
+  width: 100%;
+  padding: 10px; /* Adjust padding for a cleaner look */
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 5px; /* Add some space between inputs */
+}
+
+.add-expense-container button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px; /* Adjust padding for a cleaner button */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-expense-container button:hover {
+  background-color: #45a049;
+}
+
+/* Style for the section displaying data from the backend */
+.add-expense-container h3 {
+  margin-top: 20px;
+  color: #333;
+}
+
+.add-expense-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.add-expense-container li {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9; /* Add a subtle background color */
+}
+
+.add-expense-container li strong {
+  color: #333;
+}

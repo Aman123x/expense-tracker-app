@@ -1,33 +1,89 @@
-// Addexpense.js
-import React, { useState } from 'react';
-import './Addexpense.css'; // Import the styles
+import React, { useState, useEffect } from "react";
+import "./Addexpense.css";
 
 const AddExpense = () => {
   const [expenseData, setExpenseData] = useState({
-    amount: '',
-    description: '',
-    category: 'Food', // Default category
+    amount: "",
+    description: "",
+    category: "Food",
   });
 
-  const [submittedData, setSubmittedData] = useState([]);
+  const [submittedData, setSubmittedData] = useState(null);
+  const [dataFireBase, setDataFireBase] = useState([]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setExpenseData({ ...expenseData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitted Data:', expenseData);
+    console.log("Submitted Data:", expenseData);
 
-    setSubmittedData((prevData) => [...prevData, expenseData]);
+    setSubmittedData(expenseData);
 
     setExpenseData({
-      amount: '',
-      description: '',
-      category: 'Food',
+      amount: "",
+      description: "",
+      category: "Food",
     });
   };
+
+  const sendSubmittedData = async () => {
+    try {
+      const response = await fetch(
+        "https://expense-tracker-10d64-default-rtdb.firebaseio.com/expenseData.json",
+        {
+          method: "POST",
+          body: JSON.stringify(submittedData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    
+    const fetchData = async () => {
+      if (submittedData !== null) {
+        await sendSubmittedData();
+      }
+
+      await gettingDataFromServer();
+    };
+
+    fetchData();
+  }, [submittedData]);
+
+  async function gettingDataFromServer() {
+    try {
+      const response = await fetch(
+        "https://expense-tracker-10d64-default-rtdb.firebaseio.com/expenseData.json",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      // Convert the object into an array of objects
+      const dataArray = Object.keys(data).map((key) => ({
+        id: key, 
+        ...data[key],
+      }));
+      setDataFireBase([dataArray]);
+    //   console.log(dataFireBase);
+      // console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <div className="add-expense-container">
@@ -78,19 +134,23 @@ const AddExpense = () => {
 
         <button type="submit">Submit</button>
       </form>
-
-      {submittedData && (
-        <div className="submitted-data-container">
-          <h3>Submitted Data:</h3>
-          {submittedData.map((item, index) => (
-            <ul key={index} className="submitted-data-item">
-              <li>Amount: {item.amount}</li>
-              <li>Description: {item.description}</li>
-              <li>Category: {item.category}</li>
-            </ul>
-          ))}
-        </div>
-      )}
+      <div>
+        <h3>Data from Backend:</h3>
+        <ul>
+          {dataFireBase.map((itemArray) =>
+            itemArray.map((item) => (
+              <li key={item.id}>
+                <strong>Amount:</strong> {item.amount}
+                <br />
+                <strong>Description:</strong> {item.description}
+                <br />
+                <strong>Category:</strong> {item.category}
+                <br />
+              </li>
+            ))
+          )}
+        </ul>
+      </div>
     </div>
   );
 };
