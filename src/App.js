@@ -13,7 +13,7 @@ function App() {
 
   useEffect(() => {
     const localToken = localStorage.getItem('token');
-    if (localToken!==undefined) {
+    if (localToken && localToken !== "undefined") {
       setIdToken(localToken);
       setIsLogin(true);
     }
@@ -24,7 +24,7 @@ function App() {
   }
 
   const handleLogin=()=>{
-    // setIsLogin(true);
+    setIsLogin(true);
   }
 
   return (

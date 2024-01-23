@@ -12,20 +12,22 @@ const Login = (props) => {
     const [forgetPass,setForgetPass]=useState(false);
     const [forgetEmail,setForgetEmail]=useState("");
     const [waiting,setWaiting]=useState(false);
+    const [finalMsg,setFinalMsg]=useState(false);
 
     function handleLogin(e){
         let key=e.target.name;
         setInputLogin({...inputLogin,[key]:e.target.value});
     }
 
-    function implementLogin(e){
-        e.preventDefault();
-        verifyData();
-        // console.log(inputLogin);
-    }
+    // function implementLogin(e){
+    //     e.preventDefault();
+    //     verifyData();
+    //     // console.log(inputLogin);
+    // }
     
 
-    async function verifyData(){
+    async function implementLogin(e){
+        e.preventDefault();
         try{
             const response=await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_AUTHENTICATION_API_KEY}`,{
                 method: "POST",
@@ -38,6 +40,13 @@ const Login = (props) => {
                     "Content-Type": "application/json",
                 },
             });
+
+            if (!response.ok) {
+                // Check for HTTP error status codes
+                const errorData = await response.json();
+                throw new Error(errorData.error.message);
+            }
+
             const data=await response.json();
             props.setIdToken(data.idToken);
             
@@ -45,8 +54,8 @@ const Login = (props) => {
             props.handleLogin(true);
             console.log("Hello from login");
         }
-        catch(err){
-            alert("Wrong Email or Password");
+        catch (err) {
+            alert(`Error: ${err.message}`);
             console.log(err);
         }
     }
@@ -70,6 +79,7 @@ const Login = (props) => {
             });
             const data=await response.json();
             setWaiting(false);
+            setFinalMsg(true);
             console.log(data);
         }
         catch(err){
@@ -103,7 +113,7 @@ const Login = (props) => {
             forgetPass && 
             <div>
                 {
-                    !waiting ?
+                   !finalMsg && !waiting && 
                     <>
                         <p>Enter the email which you have registered.</p>
                         <input type='email' placeholder='Email' 
@@ -111,7 +121,9 @@ const Login = (props) => {
                             value={forgetEmail}
                         />
                         <button onClick={handleSendLink}>Send Link</button>
-                    </>:
+                    </>
+                }
+                {   waiting && !finalMsg &&
                     <ThreeCircles
                         visible={true}
                         height="100"
@@ -121,6 +133,11 @@ const Login = (props) => {
                         wrapperStyle={{}}
                         wrapperClass=""
                     />
+                }
+                {
+                    finalMsg && 
+                    <p>You would recieve a password reset link in your mail id which you entered above.<br/>
+                    Open the link and change the password.</p>
                 }
             </div>
         }

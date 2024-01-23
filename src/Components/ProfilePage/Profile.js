@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import "./Profile.css"
+import Addexpense from './Addexpense';
 
 const Profile = (props) => {
 
@@ -11,6 +12,10 @@ const Profile = (props) => {
 
     const handleEdit=()=>{
         setShowEdit(false);
+    }
+
+    const handleCancel=()=>{
+        setShowEdit(true);
     }
 
     async function handleUpdate(){
@@ -95,6 +100,7 @@ const Profile = (props) => {
     function handleLogout(){
         localStorage.removeItem("token");
         props.setIsLogin(false);
+        // setIdToken("");
     }
 
   return (
@@ -114,6 +120,8 @@ const Profile = (props) => {
                 {
                     mesg && <p>Check your email , you might have recieved a verification link . Click on it to verify</p>
                 }
+
+                <Addexpense />
             </>:
             <>
                 <div>
@@ -124,7 +132,7 @@ const Profile = (props) => {
                     <div className='upload_parent'>
                         <div className='upload_parent_child1'>
                             <h1>Contact Details</h1>
-                            <button>Cancel</button>
+                            <button onClick={handleCancel}>Cancel</button>
                         </div>
                         <div className='upload_parent_child2'>
 
